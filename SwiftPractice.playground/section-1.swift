@@ -2,8 +2,7 @@
 
 import UIKit
 
-var str = "Hello, playground"
-
+//简单值
 let myVar:Float = 4
 
 let label = "The width is "
@@ -28,6 +27,7 @@ occupations["Jayne"] = "Public Relations"
 let emptyArray = [String]()
 let emptyDictionary = [String: Float]()
 
+//控制流
 let individualScores = [94, 32, 74, 83, 36, 108]
 var teamScore = 0
 for score in individualScores {
@@ -99,7 +99,7 @@ for var i = 0; i < 4; i++ {
 }
 print(secondForLoop)
 
-
+//函数和闭包
 func greeting(name: String, day: String, meal: String) -> String{
     return "Hi \(name), Today is \(day), I ate \(meal) at lunch."
 }
@@ -146,6 +146,63 @@ func avergeOf(numbers: Int...) -> Float{
 }
 avergeOf(3, 10, 9, 2)
 
+//函数嵌套
+func returnFifteen() -> Int {
+    var y = 10
+    func add() {
+        y += 5
+    }
+    add()
+    return y
+}
+returnFifteen()
+
+//函数作为返回值
+func makeIncrementer() -> (Int -> Int) {
+    func addOne(number: Int) -> Int {
+        return 1 + number
+    }
+    return addOne
+}
+var increment = makeIncrementer()
+increment(7)
+
+//函数做参数
+func hasAnyMatches(list: [Int], condition: Int -> Bool) -> Bool {
+    for item in list {
+        if condition(item) {
+            return true
+        }
+    }
+    return false
+}
+func lessThanTen(number: Int) -> Bool {
+    return number < 10
+}
+var numbers = [10, 13, 22, 9, 36]
+hasAnyMatches(numbers, condition: lessThanTen)
+
+//用{}来创建一个匿名闭包，注意关键词in
+numbers.map({(number:Int) -> Int in
+    let result = 3 * number
+    return result})
+//重写闭包，对所有奇数都返回0
+numbers.map({
+    (number: Int) -> Int in
+    var result = 0
+    if number % 2 == 0 {
+        result = number
+    }
+    return result
+ })
+//简单的闭包创建，忽略参数类型和返回值类型。单个语句的闭包会把语句的值当做返回值返回
+let mappedNumbers = numbers.map({
+    number in number * 3
+})
+print(mappedNumbers)
+//简单的闭包创建，可以通过参数位置而不是参数名称来引用参数，而且当闭包被当做最后一个参数则可以直接跟在（）后面，如果闭包是传给函数的唯一参数，则连（)都可以省略
+let sortedNumbers = numbers.sort{$0 > $1}
+print(sortedNumbers)
 
 
 
