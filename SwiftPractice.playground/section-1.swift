@@ -205,7 +205,125 @@ let sortedNumbers = numbers.sort{$0 > $1}
 print(sortedNumbers)
 
 
+//对象和类
+class Shape {
+    var numberOfSides = 0
+    func simpleDescription() -> String {
+        return "A shape with \(numberOfSides) sides"
+    }
+    
+    let type = "shape"
+    func colorPaint(color: String) -> String {
+        return "A shape colored with \(color)"
+    }
+}
 
+var shape = Shape()
+shape.numberOfSides = 7
+shape.simpleDescription()
+shape.colorPaint("black")
+
+//类的初始化用init
+class NamedShape {
+    var numberOfSides: Int = 0
+    var name: String
+    init(name: String) {
+        self.name = name
+    }
+    func simpleDescription() -> String {
+        return "A shape with \(numberOfSides) sides"
+    }
+}
+//子类和父类
+class Square: NamedShape {
+    var sideLength: Double
+    init(sideLength: Double, name: String) {
+        self.sideLength = sideLength
+        super.init(name: name)
+        numberOfSides = 4
+    }
+    func area() -> Double {
+        return sideLength * sideLength
+    }
+    override func simpleDescription() -> String {
+        return "A square with sides of length \(sideLength)"
+    }
+}
+var square = Square(sideLength: 5.2, name: "my test square")
+square.area()
+square.simpleDescription()
+
+class Circle: NamedShape {
+    var radius: Double
+    init(radius: Double, name: String){
+        self.radius = radius
+        super.init(name: name)
+        numberOfSides = 1
+    }
+    func area() -> Double{
+        return 2 * 3.1414 * radius
+    }
+    override func simpleDescription() -> String {
+        return "A circle with radius of length \(radius)"
+    }
+}
+var circle = Circle(radius: 2.3, name: "My test circle")
+circle.area()
+circle.simpleDescription()
+
+//类的getter和setter
+class EquilateralTriangle: NamedShape {
+    var sideLength: Double
+    init (sideLength: Double, name: String){
+        self.sideLength = sideLength
+        super.init(name: name)
+        numberOfSides = 3
+    }
+    var primeter: Double{
+        get {
+            return sideLength * 3.0
+        }
+        set {
+            sideLength = newValue / 3.0
+        }
+    }
+    override func simpleDescription() -> String {
+        return "A equilateral triangle with side of length \(sideLength)"
+    }
+}
+var equilateralTrangle = EquilateralTriangle(sideLength: 3.1, name: "a triangle")
+equilateralTrangle.primeter
+equilateralTrangle.primeter = 9.9
+equilateralTrangle.sideLength
+
+//willset注意square设置的是triangle.length
+class TriangleAndSquare {
+    var triangle: EquilateralTriangle {
+        willSet {
+            square.sideLength = newValue.sideLength
+        }
+    }
+    var square: Square {
+        willSet {
+            triangle.sideLength = newValue.sideLength
+        }
+    }
+    init(size: Double, name: String) {
+        square = Square(sideLength: size, name: name)
+        triangle = EquilateralTriangle(sideLength: size, name: name)
+    }
+}
+var triangleAndSquare = TriangleAndSquare(size: 10, name: "another test shape")
+print(triangleAndSquare.square.sideLength)
+print(triangleAndSquare.triangle.sideLength)
+triangleAndSquare.square = Square(sideLength: 50, name: "larger square")
+print(triangleAndSquare.triangle.sideLength)
+
+//变量为可选值的时候，可以用？加在方法、属性和子脚本的前面。变量为nil则，返回nil，不为nil的情况时就是照常
+let optionalSquare: Square? = Square(sideLength: 1.4, name: "optional square")
+let sideLength = optionalSquare?.sideLength
+let optionalSquare1: Square? = nil
+let sideLength1 = optionalSquare1?.sideLength
 
 
 
