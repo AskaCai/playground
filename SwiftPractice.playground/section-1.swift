@@ -325,9 +325,98 @@ let sideLength = optionalSquare?.sideLength
 let optionalSquare1: Square? = nil
 let sideLength1 = optionalSquare1?.sideLength
 
+//枚举类
+enum Rank: Int {
+    case Ace = 1
+    case Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten
+    case Jack, Queen, King
+    func simpleDescription() -> String {
+        switch self {
+        case .Ace:
+            return "ace"
+        case .Jack:
+            return "jack"
+        case .Queen:
+            return "queen"
+        case .King:
+            return "king"
+        default:
+            return String(self.rawValue)
+        }
+    }
+    func compareTo(rank: Rank) -> Int {
+        if self.rawValue > rank.rawValue {
+            return 1
+        } else if self.rawValue < rank.rawValue {
+            return -1
+        } else {
+            return 0
+        }
+    }
+}
+let ace = Rank.Ace
+let aceRawValue = ace.rawValue
+let three = Rank.Three
+ace.compareTo(three)
 
+if let convertedRank = Rank(rawValue: 3) {
+    let threeDescription = convertedRank.simpleDescription()
+}
 
+//
+enum Suit {
+    case Spades, Hearts, Diamonds, Clubs
+    func simpleDescription() -> String {
+        switch self {
+        case .Spades:
+            return "spades"
+        case .Hearts:
+            return "hearts"
+        case .Diamonds:
+            return "diamonds"
+        case .Clubs:
+            return "clubs"
+        }
+    }
+    func color() -> String {
+        switch self {
+        case .Spades, .Clubs:
+            return "black"
+        default:
+            return "red"
+        }
+    }
+}
+let hearts = Suit.Hearts
+let heartsDescription = hearts.simpleDescription()
+hearts.color()
+Suit.Clubs.color()
 
+//结构体
+struct Card {
+    var rank: Rank
+    var suit: Suit
+    func simpleDescription() -> String {
+        return "The \(rank.simpleDescription()) of \(suit.simpleDescription())"
+    }
+    func allCards() -> String {
+        var myRank: Rank
+        let mySuits = [Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs]
+        var card: Card
+        var result = ""
+        for var num = Rank.Ace.rawValue; num <= Rank.King.rawValue; num++ {
+            myRank = Rank(rawValue: num)!
+            for mySuit in mySuits{
+                card = Card(rank: myRank, suit: mySuit)
+                result += card.simpleDescription() + "\n"
+            }
+        }
+        return  result
+    }
+}
+let threeOfSpades = Card(rank: .Three, suit: .Spades)
+let threeOfSpadesSimpleDescription = threeOfSpades.simpleDescription()
+print(threeOfSpades.allCards())
 
 
 
