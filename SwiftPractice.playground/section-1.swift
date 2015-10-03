@@ -363,7 +363,7 @@ if let convertedRank = Rank(rawValue: 3) {
     let threeDescription = convertedRank.simpleDescription()
 }
 
-//
+//结构体，未指定原始值
 enum Suit {
     case Spades, Hearts, Diamonds, Clubs
     func simpleDescription() -> String {
@@ -417,6 +417,24 @@ struct Card {
 let threeOfSpades = Card(rank: .Three, suit: .Spades)
 let threeOfSpadesSimpleDescription = threeOfSpades.simpleDescription()
 print(threeOfSpades.allCards())
+
+//注意如何获取Result中的日出值和日落值
+enum ServerResponse {
+    case Result(String, String)
+    case Error(String)
+    case Date(String, String, String)
+}
+let success = ServerResponse.Result("6:00 am", "8:09 pm")
+let failure = ServerResponse.Error("Out of cheese")
+let date = ServerResponse.Date("2015", "10", "03")
+switch date {
+case let .Result(sunrise, sunset):
+    let serverResponse = "Sunrise is at \(sunrise), sunset is at \(sunset)"
+case let .Error(error):
+    let serverResponse = "Failure...\(error)"
+case let .Date(year, month, day):
+    let serverResponse = "The date is \(year)-\(month)-\(day)"
+}
 
 
 
