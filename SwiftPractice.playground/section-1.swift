@@ -436,6 +436,154 @@ case let .Date(year, month, day):
     let serverResponse = "The date is \(year)-\(month)-\(day)"
 }
 
+//协议
+protocol ExampleProtocol {
+    var simpleDescription: String { get }
+    mutating func adjust()
+}
+
+//类，枚举，结构体都可以实现协议
+class SimpleClass: ExampleProtocol {
+    var simpleDescription: String = "A very simple class"
+    var anotherProperty: Int = 6
+    func adjust() {
+        simpleDescription += " Now 100% adjusted"
+    }
+}
+var a = SimpleClass()
+a.adjust()
+var aDescription = a.simpleDescription
+
+struct SimpleStructure : ExampleProtocol{
+    var simpleDescription: String = "A simple structure"
+    mutating func adjust() {
+        simpleDescription += " (adjusted)"
+    }
+}
+var b = SimpleStructure()
+b.adjust()
+let bDescription = b.simpleDescription
+//枚举类实现协议
+enum SimpleEnum: ExampleProtocol{
+    case First(String), Second(String), Third(String)
+    
+    var simpleDescription: String {
+        get {
+            switch self {
+            case let .First(text):
+                return text
+            case let .Second(text):
+                return text
+            case let .Third(text):
+                return text
+            }
+        }
+        set {
+            switch self {
+            case .First(_):
+                self = .First(newValue)
+            case .Second(_):
+                self = .Second(newValue)
+            case .Third(_):
+                self = .Third(newValue)
+        
+            }
+        }
+    }
+    mutating func adjust() {
+        switch self {
+        case let .First(text):
+            self = .First(text + " first case adjusted")
+        case let .Second(text):
+            self = .Second(text + " second case adjusted")
+        case let .Third(text):
+            self = .Third(text + " third case adjusted")
+        }
+    }
+}
+var c = SimpleEnum.First("FirstVal")
+c.simpleDescription
+c.adjust()
+c.simpleDescription
+var d = SimpleEnum.Third("ThirdVal")
+c.simpleDescription
+c.adjust()
+c.simpleDescription
+var e = SimpleEnum.Second("hello")
+var text = e.simpleDescription
+e.simpleDescription = "Adiaos"
+text = e.simpleDescription
+e.adjust()
+text = e.simpleDescription
+
+//extension扩展为现有类型添加新功能（新的方法和属性）
+extension Int: ExampleProtocol {
+    var simpleDescription: String {
+        return "The number \(self)"
+    }
+    mutating func adjust() {
+        self += 10
+    }
+}
+var extensionNumber:Int = 7
+extensionNumber.simpleDescription
+extensionNumber.adjust()
+extensionNumber.simpleDescription
+
+extension Double {
+    var absoluteValue: Double {
+        return abs(self)
+    }
+}
+(-7.9).absoluteValue
+
+//协议一样可以创建对象，处理协议对象的值时候，不能使用协议定义范围外的方法
+let protocolValue: ExampleProtocol = a
+protocolValue.simpleDescription
+//protocolValue.anotherProperty
+
+//泛型，可以是函数、结构体、类、方法、枚举（类里面的函数叫做方法）
+func repeatItems<Item>(item: Item, numberOfTimes: Int) -> [Item] {
+    var result = [Item]()
+    for _ in 0..<numberOfTimes {
+        result.append(item)
+    }
+    return result
+}
+repeatItems("Knock", numberOfTimes: 5)
+enum OptionalValue<Wrapped> {
+    case None
+    case Some(Wrapped)
+}
+var possibleInteger: OptionalValue<Int> = .None
+possibleInteger = .Some(100)
+
+//
+func anyCommonElements <T: SequenceType, U: SequenceType where T.Generator.Element: Equatable, T.Generator.Element == U.Generator.Element> (lhs: T, _ rhs: U) -> Bool {
+    for lhsItem in lhs {
+        for rhsItem in rhs {
+            if lhsItem == rhsItem {
+                return true
+            }
+        }
+    }
+    return false
+}
+anyCommonElements([1, 2, 3], [3])
+
+func whichCommonElements <T: SequenceType, U: SequenceType where T.Generator.Element: Equatable, T.Generator.Element == U.Generator.Element> (lhs: T, _ rhs: U) -> Array<T.Generator.Element> {
+    var result = Array<T.Generator.Element>()
+    for lhsItem in lhs {
+        for rhsItem in rhs {
+            if lhsItem == rhsItem {
+                result.append(lhsItem)
+            }
+        }
+    }
+    return result
+}
+whichCommonElements([1, 2, 3], [2, 3])
+
 
 
 
